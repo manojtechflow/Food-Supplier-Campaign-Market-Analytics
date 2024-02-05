@@ -133,11 +133,35 @@ The dataset captures details from six marketing campaigns, including customer ID
 4. **Conclusion:** Identified campaign success, correlation insights, product focus, and targeted campaign approach.
         - Divide customers into groups based on income and tailor advertising campaigns accordingly.
 
+5. **K-Mean Clustering:** Based on the Market Analytics performed we have derived to cluster the customers into groups for promoting campaigns.
+        - Based on Feature Importance Plot we have derived "Income, MntWines, TotalMnt" are the top most features that shows effect on Total Campaigns Acceptance.
+        
+    ## Identifying Clusters Based on Elbow Method.
+    
+    ![Elbow Plot](./Plots/elbow.png)
+
+    ## Performing K-Mean Clustering:
+    ```python
+    from sklearn.cluster import KMeans
+    kmeans = KMeans(n_clusters=2, random_state=42)
+    customer_clusters = kmeans.fit_predict(X_scaled)
+    ```
+    ## Result Plot
+    
+    ![Result Plot](./Plots/cluster_plot.png)
+
+    ## Evaluation Results:
+       - Inertia: 2070.8665
+       - Silhouette Score: 0.5829
+6. **Clustering Conclusion** 
+    - The K-Means clustering model with 2 clusters performs well based on both the Inertia and Silhouette Score.
+    - The Inertia value suggests that the clusters are relatively compact.
+    - The Silhouette Score indicates a good separation between the clusters.
+- 
 ## Areas for Improvement
 
-- Perform analysis on customer purchasing platforms
-- Create ML models for clustering customers based on user features
-- Build a recommendation model using reinforcement learning for personalized campaigns
+- Perform analysis on customer purchasing platforms.
+- Build a recommendation model using reinforcement learning for personalized campaigns.
 
 ## Tools & Technologies Used
 
@@ -147,6 +171,7 @@ The dataset captures details from six marketing campaigns, including customer ID
 
 ## Conclusion
 
-The Food Supplier Campaign Market Analytics project provides valuable insights into customer behavior and campaign effectiveness. The combination of data cleaning, EDA, and visualization offers actionable recommendations for targeted campaign strategies, contributing to the company's overall success.
+The Food Supplier Campaign Market Analytics project delivers crucial insights into customer behavior and campaign effectiveness. Through meticulous data cleaning, exploratory data analysis (EDA), and visualization, actionable recommendations have been identified for targeted campaign strategies, contributing to the overall success of the company. The successful clustering of customers into segments further enhances the potential for a refined and personalized campaign approach. By tailoring marketing efforts to the unique characteristics of each cluster, the company aims to elevate customer engagement, boost campaign acceptance rates, and ultimately drive increased sales. The robust evaluation metrics instill confidence in the effectiveness of the clustering strategy, laying a solid foundation for a successful and data-driven marketing approach.
+
 
 Thank you for exploring the Food Supplier Campaign Market Analytics project developed by Manoj Kumar Thota!
