@@ -157,7 +157,7 @@ The dataset captures details from six marketing campaigns, including customer ID
     - The K-Means clustering model with 2 clusters performs well based on both the Inertia and Silhouette Score.
     - The Inertia value suggests that the clusters are relatively compact.
     - The Silhouette Score indicates a good separation between the clusters.
-- 
+ 
 ## Areas for Improvement
 
 - Perform analysis on customer purchasing platforms.
