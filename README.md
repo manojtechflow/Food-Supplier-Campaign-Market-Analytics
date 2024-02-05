@@ -54,11 +54,11 @@ The dataset captures details from six marketing campaigns, including customer ID
    - Data visualization using histograms, pie charts, and correlation plots
         - Histogram for data distribution
         
-        ![Data Distribution](./Plots/data_distribution_histogram.png)
+        ![Data Distribution](./Plots/histogram.png)
 
         - Correlation Plot for understanding variables correlation
         
-        ![Correlation Plot](./Plots/features_correlation_plot.png)
+        ![Correlation Plot](./Plots/correlation_plot.png)
 
    - Interpretation of scatter plots and box plots to identify relationships
     
