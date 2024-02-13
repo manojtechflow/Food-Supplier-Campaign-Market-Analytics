@@ -19,94 +19,59 @@ The primary goal of this project is to analyze marketing data and propose data-d
 
 The dataset captures details from six marketing campaigns, including customer IDs, annual income, family specifics, and education qualifications. The analysis involves understanding customer spending on specific categories like wine and meat products.
 
-## Analysis Road Map
+
 
 1. **Data Cleaning & Preprocessing:**
 
-   - Handling missing values using K-Nearest Neighbors (KNN) Imputer
-
-   ```python
-    import pandas as pd
-    from sklearn.impute import KNNImputer
-    #missing value check
-    print('Sum of missing values before imputing:',data.isnull().sum().sum())
-    imputer = KNNImputer(n_neighbors=5)
-    imputed_data = imputer.fit_transform(data[['Income']])
-    Income_impute=pd.DataFrame(imputed_data,columns=['Income'])
-    data['Income']=Income_impute['Income'].reset_index(drop=True)
-
-    #missing value check
-    print('Sum of missing values:',data.isnull().sum().sum())
-   ```
+   - Handling Missing Values - found 26 missing values in Income {Dropped columns with missing values}
    - Basic cleaning techniques, formatting datatypes, and encoding categorical columns
    - Feature engineering for creating new features
    - Outliers treatment using box plots
 
    ![Ouliers Box plot](./Plots/outlier_boxplot.png)
    
-   - Dealing with Year_Birth outliers
+   ### Dealing with outliers
+   ```python
+   def outlier_removal(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    df = df[(df[column] > lower_bound) & (df[column] < upper_bound)]
+    return df
+   # Outlier removal for TotalMnt and Income Columns
+   data = outlier_removal(data, 'TotalMnt')
+   data = outlier_removal(data, 'Income')
+   ```
+   Box plot for Verification
+   ![Verifying plot](./Plots/post_outlier.png)
 
-   ![Year of Birth](./Plots/combine_year_box.JPG)
-   - **Conclusion:** Identified outliers in the 'Year_Birth' column were removed, enhancing data integrity.
+   ### Income Distribution (Histogram Plot)
 
-2. **Exploratory Data Analysis (EDA):**
-   - Univariate, Bivariate, and Multivariate analysis
-   - Data visualization using histograms, pie charts, and correlation plots
-        - Histogram for data distribution
-        
-        ![Data Distribution](./Plots/histogram.png)
+   ![Income Histogram](./Plots/histogram_income.png)
 
-        - Correlation Plot for understanding variables correlation
-        
-        ![Correlation Plot](./Plots/correlation_plot.png)
+   Income distribution is close to normal distribution with no outliers.
 
-   - Interpretation of scatter plots and box plots to identify relationships
-    
+   ## Correlation matrix
+    - There are many columns in the data. The correlation matrix will be very crowded if we use all columns of the data frame. We will group the columns and explore correlation between columns in each group and the column 'TotalMnt'. We will focus on the column 'TotalMnt' to understand how we can segment the customers who buy the most in overall. We can run similar analysis for every type of product.
+
+    ![Correlation Plot](./Plots/correlation_plot.png)
+
+    ### Features Analysis
+    - Income, TotalMnt, Total Campaign Acceptance
+
     ![Combined Conclusion ](./Plots/combined%20conclusion.JPG)
 
-   - Education Analysis
-    
-    ![Combined Education](./Plots/combined%20education.JPG)
+    - Family, TotalMnt, Total Campaign Acceptance
 
-   - Hypothesis Testing:
-    - Shapiro-Wilk Test:
-        ![Test Conclusion](./Plots/shapiro%20hypo.jpg)
-        - Based on the result we conclude that data is not normally distributed, we need to choose a non-parametric tests (Mann-Whitney U Test)
-    
-    - Hypothesis Testing: Mann-Whitney U Test 
-        ![Hypo](./Plots/hypo.jpg)
-        - The Mann-Whitney U test results indicate that the average income of PhD Customers is statistically different from that of Graduation Customers.
+    ![Combined Family](./Plots/combined_family.JPG)
+   
+   ### Plots conclusion:
+   - Increased income leads to increased spending, which leads to increased acceptance of advertising campaigns.
+   - Negative effect of having Kids and Teens on Spending and Campaigns Acceptance 
          
-   - Feature Importance:
-    - Random Forest Classifier for Feature Importance:
-        ```python
-            from sklearn.ensemble import RandomForestClassifier
 
-        # Features 
-        X =data.drop(['is_accepted','TotalCampaignsAcc','AcceptedCmp1', 'AcceptedCmp2'
-                    , 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response','Education', 'Country','Marital_Status','Kidhome','Teenhome' ],axis=1)
-        y = data.TotalCampaignsAcc
-
-        # Loading regression model
-        clf_rf = RandomForestClassifier(random_state=43)      
-        clr_rf = clf_rf.fit(X,y)
-
-        # extracting feature importance
-        importances = clr_rf.feature_importances_
-        std = np.std([tree.feature_importances_ for tree in clr_rf.estimators_],axis=0)
-        indices = np.argsort(importances)[::-1]
-
-        # Plot the feature importances of the forest
-        plt.figure(1, figsize=(14, 13))
-        plt.title("Feature importances")
-        plt.bar(range(X.shape[1]), importances[indices],color="g", yerr=std[indices], align="center")
-        plt.xticks(range(X.shape[1]), X.columns[indices],rotation=90)
-        plt.xlim([-1, X.shape[1]])
-        plt.show()
-        ```
-    - plot
-        ![Feature Importance Plot](./Plots/feature_importance.png)
-        - As we have seen, there is a strong relationship between acceptance of advertising campaigns and MntWines, income, & TotalMnt, MntGoldprods, MntMeatProducts.
 
   - Region Acceptance
     ![Reagion Acceptance](./Plots/campaign_acceptace_plot.png)
@@ -130,48 +95,159 @@ The dataset captures details from six marketing campaigns, including customer ID
 
    - **Conclusion:** Mexico (ME) exhibits the highest acceptance rate in the most recent campaign, with 66.66%.
 
-4. **Conclusion:** Identified campaign success, correlation insights, product focus, and targeted campaign approach.
-        - Divide customers into groups based on income and tailor advertising campaigns accordingly.
 
 5. **K-Mean Clustering:** Based on the Market Analytics performed we have derived to cluster the customers into groups for promoting campaigns.
-        - Based on Feature Importance Plot we have derived "Income, MntWines, TotalMnt" are the top most features that shows effect on Total Campaigns Acceptance.
-        
-    ## Identifying Clusters Based on Elbow Method.
+      
+    ## Standardising data
+    - K-means clustering algorithm is based on the calculation of distances between data points to form clusters. When features have different scales, features with larger scales can disproportionately influence the distance calculation. There are various ways to standardise features, we will use standard scaling .
+
+    ## Principal Component Analysis (PCA)
+    - PCA is a technique of dimensionality reduction. PCA takes the original features (dimensions) and create new features that capture the most variance of the data.    
+
+    ```python
+    from sklearn import decomposition
+    pca = decomposition.PCA(n_components = 2)
+    pca_res = pca.fit_transform(data_scaled[cols_for_clustering])
+    data_scaled['pc1'] = pca_res[:,0]
+    data_scaled['pc2'] = pca_res[:,1]
+    ```
+    ## Elbow method
+    - The elbow method is a technique used to determine the optimal number of clusters (K) for K-means clustering algorithm.
+    - Plot
     
     ![Elbow Plot](./Plots/elbow.png)
+
+    Elbow method suggests 4 or 5 clusters. Let's check silhouette score.
+
+    ## Silhouette score analysis
+    - Silhouette score is a metric that used to assess the quality of clustering. A higher silhouette score indicates that the clusters are well-separated, while a lower score suggests that the clusters may overlap or are poorly defined.
+
+    ```python
+    from sklearn.metrics import silhouette_score
+    silhouette_list = []
+    for K in range(2,10):
+        model = KMeans(n_clusters = K, random_state=7)
+        clusters = model.fit_predict(X)
+        s_avg = silhouette_score(X, clusters)
+        silhouette_list.append(s_avg)
+
+    plt.figure(figsize=[7,5])
+    plt.plot(range(2,10), silhouette_list, color=(54 / 255, 113 / 255, 130 / 255))
+    plt.title("Silhouette Score vs. Number of Clusters")
+    plt.xlabel("Number of Clusters (K)")
+    plt.ylabel("Silhouette Score")
+    plt.show()
+    ```
+    - Plot
+    ![Silhouette Score](./Plots/Silhouette_score.png) 
+
+    The highest silhouette score is for 4 clusters.
+
+
 
     ## Performing K-Mean Clustering:
     ```python
     from sklearn.cluster import KMeans
-    kmeans = KMeans(n_clusters=2, random_state=42)
-    customer_clusters = kmeans.fit_predict(X_scaled)
+    model = KMeans(n_clusters=4, random_state = 7)
+    model.fit(data_scaled[cols_for_clustering])
+    data_scaled['Cluster'] = model.predict(data_scaled[cols_for_clustering])
     ```
-    ## Result Plot
-    
+    ### Exploration of Clusters
+    - In this section:
+
+        - Visualisation of clusters
+        - Mean consumption of different product types by cluster
+        - Cluster sizes
+        - Income by cluster
+        - In_relationship feature by cluster
+
+    ### Visualisation of clusters
+
     ![Result Plot](./Plots/cluster_plot.png)
 
-    ## Evaluation Results:
-       - Inertia: 2070.8665
-       - Silhouette Score: 0.5829
-6. **Clustering Conclusion** 
-    - The K-Means clustering model with 2 clusters performs well based on both the Inertia and Silhouette Score.
-    - The Inertia value suggests that the clusters are relatively compact.
-    - The Silhouette Score indicates a good separation between the clusters.
- 
-## Areas for Improvement
+    ### Mean consumption of different product types by cluster
 
-- Perform analysis on customer purchasing platforms.
-- Build a recommendation model using reinforcement learning for personalized campaigns.
+    ![Cluster Share](./Plots/cluster_share.png)
+
+    ### Cluster Size
+
+    ![Cluster Size](./Plots/cluster_size.png)
+
+    ### Income By Cluster
+
+    ![Cluster Income](./Plots/Cluster_income.png)
+
+    ### Scatter Plot : Income & Total Amout Spent by Clusters
+
+    ![Cluster Scatter](./Plots/cluster_scatter.png)
+
+    ### In Relationship Feature by Cluster
+
+    ![Cluster relationship](./Plots/cluster_relationship.png)
+
+    
+
+
+## Results
+This section contains the results of the K-means clustering analysis, which aimed to identify distinct customer segments based on the total amount of purchases they made (MntTotal). The analysis utilised 'Income' and 'In_relationship' features.
+
+### Optimal number of clusters = 4
+The Elbow Method and Silhouette Analysis suggested 4 clusters (k=4). The elbow method highlighted the number of 4 or 5 clusters as a reasonable number of clusters. The silhouette score analysis revealed a peak silhouette score for k=4.
+
+### Cluster Characteristics
+
+Cluster 0: High value customers in relationship (either married or together)
+- This cluster represents 26% of the customer base
+- These customers have high income and they are in a relationship
+
+Cluster 1: Low value single customers
+- This cluster represents 21% of the customer base
+- These customers have low income and they are single
+
+Cluster 2: High value single customers
+- This cluster represents 15% of the customer base
+- These customers have high income and they are single
+
+Cluster 3: Low value customers in relationship
+- This cluster represents 39% of the customer base
+-These customers have low income and they are in a relationship
+
+
+## Recommendations
+Based on the clusters, tailored marketing strategies can be created. Customers from these segments will have different interests and product preferences.
+
+### Marketing Strategies for Each Cluster
+
+Cluster 0: High value customers in relationship (either married or together)
+- Preliminary analysis showed that high income customers buy more wines and fruits.
+- A tailored campaign to promote high quality wines may bring good results.
+- This cluster contains customers in relationship, family-oriented promo-images should be quite effective for this audience.
+
+Cluster 1: Low value single customers
+- Promos with discounts and coupons may bring good results for this targeted group.
+- Loyalty program may stimulate these customers to purchase more often.
+
+Cluster 2: High value single customers
+- Similar to the Cluster 0, these customers buy a lot of wines and fruits.
+- This cluster contains single customers. Promo images with friends, parties or single trips may be more efficient for single customers
+
+Cluster 3: Low value customers in relationship
+- This cluster has the highest percentage of our customers (39%).
+- Family offers and discounts may influence these customers to make more purchases
+
+### Opportunities for the further analysis
+- Further exploration on how children influence on the consumed products
+- Further analysis on the influence of education
+- analysis of frequent buyers
+- Analysis of sales channels, e.g. store, website, etc.
+- Analysis of the response to the marketing campaigns
+- It would be great to add gender data to the dataset
+- Test different clustering algorithms
 
 ## Tools & Technologies Used
 
 - **Programming Language:** Python
 - **Working Environment:** Visual Studio Code, Python Environment (Python 3.x)
 - **Libraries and Frameworks:** Pandas, Numpy, Seaborn, Matplotlib, Scikit-learn (Sklearn), Scipy
-
-## Conclusion
-
-The Food Supplier Campaign Market Analytics project delivers crucial insights into customer behavior and campaign effectiveness. Through meticulous data cleaning, exploratory data analysis (EDA), and visualization, actionable recommendations have been identified for targeted campaign strategies, contributing to the overall success of the company. The successful clustering of customers into segments further enhances the potential for a refined and personalized campaign approach. By tailoring marketing efforts to the unique characteristics of each cluster, the company aims to elevate customer engagement, boost campaign acceptance rates, and ultimately drive increased sales. The robust evaluation metrics instill confidence in the effectiveness of the clustering strategy, laying a solid foundation for a successful and data-driven marketing approach.
-
 
 Thank you for exploring the Food Supplier Campaign Market Analytics project developed by Manoj Kumar Thota!
