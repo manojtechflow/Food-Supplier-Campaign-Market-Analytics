@@ -28,7 +28,7 @@ The dataset captures details from six marketing campaigns, including customer ID
    - Feature engineering for creating new features
    - Outliers treatment using box plots
 
-   ![Ouliers Box plot](./Plots/oulier_boxplot.png)
+   ![Ouliers Box plot](./Plots/pre_oulier_boxplot.png)
    
    ### Dealing with outliers
    ```python
