@@ -72,23 +72,20 @@ The dataset captures details from six marketing campaigns, including customer ID
    - Negative effect of having Kids and Teens on Spending and Campaigns Acceptance 
          
 
-
-  - Region Acceptance
-    ![Reagion Acceptance](./Plots/campaign_acceptace_plot.png)
-    - Mexico (ME) has Highest Acceptance in {Most recent} campaign = 66.66%
-
 3. **Data Visualization:**
    - Visual tools like charts, graphs, and maps to reveal patterns and trends
+
+   - Region Acceptance
+    ![Reagion Acceptance](./Plots/campaign_acceptace_plot.png)
+    - Mexico (ME) has Highest Acceptance in {Most recent} campaign = 66.66%
+    
    - Bar charts for region-wise acceptance rates, bar charts for campaign success rates by country
         - What is the best-selling product during marketing campaigns?
         ![Best Selling](./Plots/best_setting%20products.png)
 
         - Which Country has highest amount spent? 
         ![Most Spending](./Plots/amount_spent_country.png)
-
-   - Region wise campaign acceptance
-    ![Region Acceptance](./Plots/geo_advartisement)
-
+    
    - Which marketing campaign is most successful? 
     ![Most success](./Plots/camp_success_rate.png)
 
