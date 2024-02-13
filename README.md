@@ -61,7 +61,7 @@ The dataset captures details from six marketing campaigns, including customer ID
     ### Features Analysis
     - Income, TotalMnt, Total Campaign Acceptance
 
-    ![Combined Conclusion ](./Plots/combined%20conclusion.JPG)
+    ![Combined Conclusion ](./Plots/combined_income.JPG)
 
     - Family, TotalMnt, Total Campaign Acceptance
 
@@ -76,18 +76,18 @@ The dataset captures details from six marketing campaigns, including customer ID
    - Visual tools like charts, graphs, and maps to reveal patterns and trends
 
    - Region Acceptance
-    ![Reagion Acceptance](./Plots/campaign_acceptace_plot.png)
+    ![Reagion Acceptance](./Plots/region_wise.png)
     - Mexico (ME) has Highest Acceptance in {Most recent} campaign = 66.66%
-    
+
    - Bar charts for region-wise acceptance rates, bar charts for campaign success rates by country
         - What is the best-selling product during marketing campaigns?
-        ![Best Selling](./Plots/best_setting%20products.png)
+        ![Best Selling](./Plots/bestselling.png)
 
         - Which Country has highest amount spent? 
-        ![Most Spending](./Plots/amount_spent_country.png)
+        ![Most Spending](./Plots/country_amout.png)
     
    - Which marketing campaign is most successful? 
-    ![Most success](./Plots/camp_success_rate.png)
+    ![Most success](./Plots/compaign_success.png)
 
 
    - **Conclusion:** Mexico (ME) exhibits the highest acceptance rate in the most recent campaign, with 66.66%.
